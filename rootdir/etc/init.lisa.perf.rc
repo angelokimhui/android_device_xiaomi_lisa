@@ -118,7 +118,29 @@ on property:vendor.post_boot.parsed=1
 
     # Configure uclamp
     write /dev/cpuctl/top-app/cpu.uclamp.latency_sensitive 1
+    write /dev/cpuctl/background/cpu.uclamp.max 50
+    write /dev/cpuctl/system-background/cpu.uclamp.max 50
+    write /dev/cpuctl/dex2oat/cpu.uclamp.max 60
+    # Setup cpu.shares to throttle background groups (bg ~ 5% sysbg ~ 5% dex2oat ~2.5%)
+    write /dev/cpuctl/background/cpu.shares 1024
+    write /dev/cpuctl/system-background/cpu.shares 1024
+    write /dev/cpuctl/dex2oat/cpu.shares 512
+    write /dev/cpuctl/system/cpu.shares 20480
+    # We only have system and background groups holding tasks and the groups below are empty
+    write /dev/cpuctl/camera-daemon/cpu.shares 20480
+    write /dev/cpuctl/foreground/cpu.shares 20480
+    write /dev/cpuctl/nnapi-hal/cpu.shares 20480
+    write /dev/cpuctl/rt/cpu.shares 20480
+    write /dev/cpuctl/top-app/cpu.shares 20480
 
-on property:ro.board.platform=lahaina
+    # Disable multiple kswapd threads
+    write /proc/sys/vm/kswapd_threads 1
+
+    # Enable suspend to RAM
+    write /sys/power/mem_sleep "deep"
+
+    # GPU
+    write /sys/class/kgsl/kgsl-3d0/bcl 0
+
     # Setup foreground cpuset for display composer.
-    write /dev/cpuset/foreground/cpus 0-6
+    write /dev/cpuset/foreground/cpus 0-3
