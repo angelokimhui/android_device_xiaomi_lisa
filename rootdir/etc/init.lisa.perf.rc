@@ -126,18 +126,10 @@ on property:vendor.post_boot.parsed=1
     write /dev/cpuctl/system-background/cpu.shares 1024
     write /dev/cpuctl/dex2oat/cpu.shares 512
     write /dev/cpuctl/system/cpu.shares 20480
-    # We only have system and background groups holding tasks and the groups below are empty
-    write /dev/cpuctl/camera-daemon/cpu.shares 20480
-    write /dev/cpuctl/foreground/cpu.shares 20480
-    write /dev/cpuctl/nnapi-hal/cpu.shares 20480
-    write /dev/cpuctl/rt/cpu.shares 20480
-    write /dev/cpuctl/top-app/cpu.shares 20480
 
-    # Disable multiple kswapd threads
-    write /proc/sys/vm/kswapd_threads 1
-
-    # Enable suspend to RAM
-    write /sys/power/mem_sleep "deep"
+    # CPU boosting mechanism
+    write /sys/devices/system/cpu/cpu_boost/input_boost_freq "0:940800"
+    write /sys/devices/system/cpu/cpu_boost/input_boost_ms 1000
 
     # GPU
     write /sys/class/kgsl/kgsl-3d0/bcl 0
